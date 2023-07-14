@@ -12,7 +12,6 @@ setup(
     name="challenge_meli",
     version=__version__,
     author="Luis Fillype",
-    python_requires=">=3.10.0",
     description="Data Engineering Challenge: MELI",
     long_description=readme,
     url="https://github.com/castielisgone/challenge-meli",
