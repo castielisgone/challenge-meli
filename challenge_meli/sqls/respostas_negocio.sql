@@ -1,5 +1,7 @@
 
 -- Início da resposta do primeiro enunciado
+-- Aqui, a relação de CustomerCustomerType auxiliou na obteção dos customers, pois eles podem
+-- ser vendedores ou compradores. Ao final, realiza um having com os valores maiores que 1500 (Representando as vendas)
 SELECT c.*
 FROM Customer as c
 INNER JOIN CustomerCustomertype as cct on c.id = cct.customer_id
@@ -8,6 +10,9 @@ INNER JOIN Item i ON c.item_id = i.id
 INNER JOIN Orders o on i.id = o.item_id
 
 WHERE
+    -- Para saber o aniversário, a lógica pega o mês de nascimento e compara com a data corrente,
+    -- também como o dia. Além disso, queremos as vendas do Mês de Janeiro, que corresponde ao month purchase_date = 1 do Date_Part, e year 
+    -- 2020.
     DATE_PART('month', c.date_of_birth) = DATE_PART('month', CURRENT_DATE)
     AND DATE_PART('day', c.date_of_birth) = DATE_PART('day', CURRENT_DATE)
     AND DATE_PART('year', o.purchase_date) = 2020
@@ -17,11 +22,14 @@ HAVING COUNT(o.id) > 1500;
 
 -- Fim da resposta do primeiro enunciado
 
+
 -- Início da resposta do segundo enunciado
 SELECT
-    DATE_TRUNC('month', o.purchase_date) AS month,
+    DATE_PART('month', o.purchase_date) AS month,
     EXTRACT(YEAR FROM o.purchase_date) AS year,
     c.first_name,
+    c.lastname,
+    i.name,
     COUNT(DISTINCT o.id) AS sales_quantity,
     COUNT(DISTINCT o.item_id) AS products_sold,
     SUM(o.quantity * i.price) AS total_sold
@@ -41,12 +49,14 @@ WHERE
     cat.id in (1,2,3)
     AND EXTRACT(YEAR FROM o.purchase_date) = 2020
 GROUP BY
-    DATE_TRUNC('month', o.purchase_date),
+    DATE_PART('month', o.purchase_date),
     EXTRACT(YEAR FROM o.purchase_date),
     c.id,
-    c.first_name
+    c.first_name,
+    c.lastname
+    i.name
 ORDER BY
-    DATE_TRUNC('month', o.purchase_date),
+    DATE_PART('month', o.purchase_date),
     SUM(o.quantity * i.price) DESC
 LIMIT 5;
 
